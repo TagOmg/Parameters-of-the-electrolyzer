@@ -4,13 +4,15 @@ This project is dedicated to calculating the characteristics
 of the electrolyzer according to the specified parameters
 """
 import sys
+import os
+
 # setting the variables that we will use in the calculation
 Watts_per_liter = 100
 Area_per_watt = 0.1
 Plates_for_two_volts = 2
-Hole_deameter_per_liter = 4
-
-
+Hole_diameter_per_liter = 4
+desktop = os.path.join(os.path.join(os.environ['USERPROFILE']), 'Desktop')
+file = open(desktop +"\\Parameters.txt", "w", encoding="utf-8")
 def quest_and_settings():  # we ask the user what parameter he wants to set
 	global User_Ans
 	User_Ans = str(input(
@@ -22,7 +24,26 @@ def quest_and_settings():  # we ask the user what parameter he wants to set
 	)
 
 quest_and_settings()
-
+def Quit(Watts, Number_of_liters, Working_Area, Diameter, Number_of_plates, Amps, Volts):
+	new_ans = str(input("Do you want to find the parameters in a different way?"
+						"\n yes or not?\n"))
+	if new_ans in ("Yes", "yes", "y"):
+		quest_and_settings()
+	elif new_ans in ("No", "no", "n"):
+		write_File = str(input("Do you want to save the answers in txt on your computer?"))
+		if write_File in ("Yes", "yes", "y"):
+			file.write(
+				"Characteristics of the electrolyzer: "
+				"\nElectrical characteristics:"
+				"\n It will be required " + str(Watts) + " watts""                   Ampere needed:" + str(Amps) +
+				"\n Generate " + str(Number_of_liters) + " liters of hydrogen""      Volts needed:" + str(Volts) +
+				"\n Dimensions,quantity of materials:"
+				"\n Working area excluding work on both sides: " + str(Working_Area) + "m²""				    number of plates: " + str(Number_of_plates) +
+				"\n Working area, considering the work on both sides: " + str(Working_Area * 2) + "m²""			Internal diameter of fittings: " + str(Diameter) + ""
+			)
+			sys.exit()
+		elif write_File in ("No", "no", "n"):
+			sys.exit()
 def Print_characteristic(Watts, Number_of_liters, Working_Area, Diameter, Number_of_plates, Amps, Volts):
 	print(
 		"Characteristics of the electrolyzer: "
@@ -42,22 +63,15 @@ def parameters_by_liters():
 	Watts = Watts_per_liter * Number_of_liters
 	Working_Area = Area_per_watt * Watts / 100
 	if Number_of_liters > 1:
-		Diameter = (Number_of_liters - 1) + Hole_deameter_per_liter
+		Diameter = (Number_of_liters - 1) + Hole_diameter_per_liter
 	elif Number_of_liters < 1:
-		Diameter = Hole_deameter_per_liter * Number_of_liters
+		Diameter = Hole_diameter_per_liter * Number_of_liters
 	elif Number_of_liters == 1:
 		Diameter = 4
 	Volts = 2 * Number_of_plates
 	Amps = Watts / Volts
 	Print_characteristic(Watts, Number_of_liters, Working_Area, Diameter, Number_of_plates, Amps , Volts)
-	new_ans = str(input("Do you want to find the parameters in a different way?"
-						"\n yes or not?"
-						)
-				  )
-	if new_ans in ("Yes", "yes", "y"):
-		quest_and_settings()
-	elif new_ans in ("No", "no", "n"):
-		sys.exit()
+	Quit(Watts, Number_of_liters, Working_Area, Diameter, Number_of_plates, Amps, Volts)
 
 def parameters_by_Watts():
 	Watts = float(input("Installation power (In watts) \n"))
@@ -65,27 +79,18 @@ def parameters_by_Watts():
 	Number_of_liters = Watts / Watts_per_liter
 	Working_Area = Area_per_watt * Watts / 100
 	if Number_of_liters > 1:
-		Diameter = (Number_of_liters - 1) + Hole_deameter_per_liter
+		Diameter = (Number_of_liters - 1) + Hole_diameter_per_liter
 	elif Number_of_liters < 1:
-		Diameter = Hole_deameter_per_liter * Number_of_liters
+		Diameter = Hole_diameter_per_liter * Number_of_liters
 	elif Number_of_liters == 1:
 		Diameter = 4
 	Volts = 2 * Number_of_plates
 	Amps = Watts / Volts
 	Print_characteristic(Watts, Number_of_liters, Working_Area, Diameter, Number_of_plates, Amps, Volts)
-	new_ans = str(input("Do you want to find the parameters in a different way?"
-						"\n yes or not?"
-						)
-				  )
-	if new_ans in ("Yes", "yes", "y"):
-		quest_and_settings()
-	elif new_ans in ("No", "no", "n"):
-		sys.exit()
-
+	Quit(Watts, Number_of_liters, Working_Area, Diameter, Number_of_plates, Amps, Volts)
 
 
 # calling functions depending on the response
-
 if User_Ans == "1":
 	parameters_by_liters()
 elif User_Ans == "2":
